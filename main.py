@@ -80,7 +80,7 @@ def listen_for_command():
     """Listen for commands from the user."""
     with sr.Microphone() as source:
         recog.adjust_for_ambient_noise(source)
-        print("Listening for 'hello' to activate...")
+        print("Listening for 'insane' to activate...")
 
         try:
             audio = recog.listen(source, timeout=10, phrase_time_limit=10)  
@@ -98,13 +98,13 @@ def listen_for_command():
             return None
 
 if __name__ == "__main__":
-    speak("Activating Aria-Assistant")
+    speak("Activating insane-Assistant")
 
     while True:
         command = listen_for_command()
 
         if command:
-            if "hello" in command:
+            if "insane" in command:
                 speak("Yes, how can I assist you?")
                 print("Listening for your command...")
 
@@ -113,6 +113,13 @@ if __name__ == "__main__":
                 if command:
                     processcommand(command)
 
+            elif "goodbye" or "exit" or "Quit" in command:
+                speak("Goodbye!")
+                exit()
+
+
             else:
-                print("Listening for 'hello' to activate...")
-                speak("Say 'hello' to activate the assistant.")
+                print("Listening for 'insane' to activate...")
+                speak("Say 'insane' to activate the assistant.")
+
+        
