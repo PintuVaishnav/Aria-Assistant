@@ -4,7 +4,6 @@ import webbrowser
 import subprocess
 import urllib.parse
 
-# Initialize speech recognition and text-to-speech engine
 recog = sr.Recognizer()
 ttsx = pyttsx3.init()
 
@@ -84,7 +83,7 @@ def listen_for_command():
         print("Listening for 'hello' to activate...")
 
         try:
-            audio = recog.listen(source, timeout=10, phrase_time_limit=10)  # Increased timeout and phrase time limit
+            audio = recog.listen(source, timeout=10, phrase_time_limit=10)  
             command = recog.recognize_google(audio)
             print(f"Recognized: {command}")
             return command.lower()
@@ -109,8 +108,8 @@ if __name__ == "__main__":
                 speak("Yes, how can I assist you?")
                 print("Listening for your command...")
 
-                # Allow the assistant to listen for the next command
-                command = listen_for_command()  # Wait for next command after activation phrase
+               
+                command = listen_for_command()  
                 if command:
                     processcommand(command)
 
