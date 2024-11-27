@@ -1,89 +1,80 @@
 import speech_recognition as sr
 import pyttsx3
 import webbrowser
-import subprocess
 import urllib.parse
+import requests
 
 recog = sr.Recognizer()
 ttsx = pyttsx3.init()
 
 def speak(text):
-    """Speak the given text."""
     ttsx.say(text)
     ttsx.runAndWait()
 
+def fetch_definition_online(query):
+    try:
+        response = requests.get(
+            f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(query)}"
+        )
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("extract", "Sorry, I couldn't find information on that.")
+        else:
+            return "Sorry, I couldn't find information on that."
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
+def answer_question(question):
+    query = question.replace("what is", "").replace("who is", "").replace("define", "").strip()
+    speak("Let me find that for you.")
+    answer = fetch_definition_online(query)
+    speak(answer)
+
 def processcommand(command):
-    """Process the given command and take appropriate actions."""
     command = command.strip().lower()
 
-    if "open" in command:
-        is_incognito = "incognito" in command
-        site_name = command.replace("open", "").replace("incognito", "").strip().lower()
-
-        if "play" in command:
-            task_site = site_name.split("play")[0].strip()
-            task_content = command.split("play")[1].strip()
-
-            speak(f"Opening {task_site} and playing {task_content}")
-
-            if "spotify" in task_site:
+    if command.startswith("what is") or command.startswith("who is"):
+        answer_question(command)
+    elif "open" in command:
+        site_name = command.replace("open", "").strip()
+        if "spotify" in command and "my songs" in command:
+            speak("Opening Spotify and playing your songs.")
+            webbrowser.open("https://open.spotify.com/collection/tracks")
+        elif "Spotify" in command and "play next song" in command:
+            speak("Playing the next song on Spotify.")
+            webbrowser.open("https://open.spotify.com/collection/tracks")
+        elif "brave" in command:
+            task_content = command.replace("open brave", "").strip()
+            if task_content:
+                speak(f"Opening {task_content} on Brave.")
+                webbrowser.open(f"https://search.brave.com/search?q={urllib.parse.quote(task_content)}")
+            else:
+                speak("Opening Brave.")
+        elif "spotify" in command:
+            task_content = command.replace("open spotify and play", "").strip()
+            if task_content:
+                speak(f"Playing {task_content} on Spotify.")
                 webbrowser.open(f"https://open.spotify.com/search/{urllib.parse.quote(task_content)}")
-
-            elif "youtube" in task_site:
-                search_query = urllib.parse.quote(task_content)
-                webbrowser.open(f"https://www.youtube.com/results?search_query={search_query}")
-                webbrowser.open(f"https://www.youtube.com/watch?v={search_query}")
-            
             else:
-                speak(f"Sorry, I don't know how to play content on {task_site}.")
-
-        elif "search" in command:
-            task_site = site_name.split("search")[0].strip()
-            search_query = command.split("search for")[1].strip() if "search for" in command else ""
-            speak(f"Searching for {search_query} on {task_site}")
-
-            if "google" in task_site:
-                if is_incognito:
-                    subprocess.run(["chrome", "--incognito", f"https://www.google.com/search?q={urllib.parse.quote(search_query)}"])
-                else:
-                    webbrowser.open(f"https://www.google.com/search?q={urllib.parse.quote(search_query)}")
-
-            elif "youtube" in task_site:
-                if is_incognito:
-                    subprocess.run(["chrome", "--incognito", f"https://www.youtube.com/results?search_query={urllib.parse.quote(search_query)}"])
-                else:
-                    webbrowser.open(f"https://www.youtube.com/results?search_query={urllib.parse.quote(search_query)}")
-            
-            elif "linkedin" in task_site:
-                webbrowser.open(f"https://www.linkedin.com/search/results/people/?keywords={urllib.parse.quote(search_query)}")
-            
-            elif "twitter" in task_site:
-                webbrowser.open(f"https://twitter.com/search?q={urllib.parse.quote(search_query)}")
-            
-            elif "wikipedia" in task_site:
-                webbrowser.open(f"https://en.wikipedia.org/wiki/{urllib.parse.quote(search_query)}")
-            
-            else:
-                speak(f"Sorry, I don't know how to search on {task_site}.")
-
+                speak("Opening Spotify.")
+                webbrowser.open("https://open.spotify.com/")
+        elif "youtube" in command and "play" in command:
+            task_content = command.split("play")[1].strip()
+            search_query = urllib.parse.quote(task_content)
+            speak(f"Playing {task_content} on YouTube.")
+            webbrowser.open(f"https://www.youtube.com/results?search_query={search_query}")
         else:
             speak(f"Opening {site_name}")
-            if is_incognito:
-                subprocess.run(["chrome", "--incognito", f"https://www.{site_name}.com"])
-            else:
-                webbrowser.open(f"https://www.{site_name}.com")
-
+            webbrowser.open(f"https://www.{site_name}.com")
     else:
         speak("Sorry, I didn't understand the command.")
 
 def listen_for_command():
-    """Listen for commands from the user."""
     with sr.Microphone() as source:
         recog.adjust_for_ambient_noise(source)
-        print("Listening for 'insane' to activate...")
-
+        print("Listening for 'Hello Aria' to activate...")
         try:
-            audio = recog.listen(source, timeout=10, phrase_time_limit=10)  
+            audio = recog.listen(source, timeout=10, phrase_time_limit=10)
             command = recog.recognize_google(audio)
             print(f"Recognized: {command}")
             return command.lower()
@@ -98,28 +89,17 @@ def listen_for_command():
             return None
 
 if __name__ == "__main__":
-    speak("Activating insane-Assistant")
-
+    speak("Activating Aria-Assistant")
     while True:
         command = listen_for_command()
-
         if command:
-            if "insane" in command:
+            if "hello" in command or "aria" in command or "arya" in command:
                 speak("Yes, how can I assist you?")
-                print("Listening for your command...")
-
-               
-                command = listen_for_command()  
+                command = listen_for_command()
                 if command:
                     processcommand(command)
-
-            elif "goodbye" or "exit" or "Quit" in command:
+            elif "goodbye" in command or "exit" in command:
                 speak("Goodbye!")
                 exit()
-
-
             else:
-                print("Listening for 'insane' to activate...")
-                speak("Say 'insane' to activate the assistant.")
-
-        
+                print("Listening for 'Hello Aria' to activate...")
