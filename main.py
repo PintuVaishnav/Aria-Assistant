@@ -33,7 +33,7 @@ def answer_question(question):
 def processcommand(command):
     command = command.strip().lower()
 
-    if command.startswith("what is") or command.startswith("who is"):
+    if command.startswith("what is") or command.startswith("who is") or command.startswith("define"):
         answer_question(command)
     elif "open" in command:
         site_name = command.replace("open", "").strip()
