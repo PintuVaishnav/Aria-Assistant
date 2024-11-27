@@ -43,13 +43,13 @@ def processcommand(command):
         elif "Spotify" in command and "play next song" in command:
             speak("Playing the next song on Spotify.")
             webbrowser.open("https://open.spotify.com/collection/tracks")
+        elif "gemini" in command or "gemini ai" in command:
+            speak("Opening Gemini AI.")
+            webbrowser.open("https://gemini.google.com/")
         elif "brave" in command:
-            task_content = command.replace("open brave", "").strip()
-            if task_content:
-                speak(f"Opening {task_content} on Brave.")
-                webbrowser.open(f"https://search.brave.com/search?q={urllib.parse.quote(task_content)}")
-            else:
-                speak("Opening Brave.")
+            speak("Opening Brave Browser." if not command.endswith(("on brave", "on brave browser", "brave browser", "in brave browser", "in brave")) else f"Opening {command.replace('on brave', '').replace('browser', '').strip()} on Brave Browser.")
+            webbrowser.open(f"https://search.brave.com/search?q={urllib.parse.quote(command.replace('on brave', '').replace('browser', '').strip())}" if command.endswith(("on brave", "on brave browser", "brave browser", "in brave browser", "in brave")) else "https://search.brave.com/")
+
         elif "spotify" in command:
             task_content = command.replace("open spotify and play", "").strip()
             if task_content:
@@ -63,6 +63,9 @@ def processcommand(command):
             search_query = urllib.parse.quote(task_content)
             speak(f"Playing {task_content} on YouTube.")
             webbrowser.open(f"https://www.youtube.com/results?search_query={search_query}")
+        elif "chatgpt" in command or "chat gpt" in command or "gpt" in command:
+            speak("Opening ChatGPT.")
+            webbrowser.open("https://chatgpt.com/")    
         else:
             speak(f"Opening {site_name}")
             webbrowser.open(f"https://www.{site_name}.com")
@@ -93,7 +96,7 @@ if __name__ == "__main__":
     while True:
         command = listen_for_command()
         if command:
-            if "hello" in command or "aria" in command or "arya" in command:
+            if "hello" in command or "aria" in command or "arya" in command or "hey" in command:
                 speak("Yes, how can I assist you?")
                 command = listen_for_command()
                 if command:
