@@ -30,6 +30,7 @@ def answer_question(question):
     speak("Let me find that for you.")
     answer = fetch_definition_online(query)
     speak(answer)
+    print(answer)
 
 def processcommand(command):
     command = command.strip().lower()
@@ -85,6 +86,7 @@ def listen_for_command():
         recog.adjust_for_ambient_noise(source)
         print("Listening for 'Hello Aria' to activate...")
         try:
+            print("Listening for command...")
             audio = recog.listen(source, timeout=10, phrase_time_limit=10)
             command = recog.recognize_google(audio)
             print(f"Recognized: {command}")
