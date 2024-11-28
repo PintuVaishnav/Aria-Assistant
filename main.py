@@ -3,6 +3,7 @@ import pyttsx3
 import webbrowser
 import urllib.parse
 import requests
+import re
 
 recog = sr.Recognizer()
 ttsx = pyttsx3.init()
@@ -62,7 +63,14 @@ def processcommand(command):
             task_content = command.split("play")[1].strip()
             search_query = urllib.parse.quote(task_content)
             speak(f"Playing {task_content} on YouTube.")
-            webbrowser.open(f"https://www.youtube.com/results?search_query={search_query}")
+
+            search_url = f"https://www.youtube.com/results?search_query={search_query}"
+            response = requests.get(search_url)
+    
+            video_ids = re.findall(r"watch\?v=(\S{11})", response.text)
+            if video_ids:
+                first_video_url = f"https://www.youtube.com/watch?v={video_ids[0]}"
+                webbrowser.open(first_video_url)
         elif "chatgpt" in command or "chat gpt" in command or "gpt" in command:
             speak("Opening ChatGPT.")
             webbrowser.open("https://chatgpt.com/")    
