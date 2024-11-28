@@ -53,8 +53,8 @@ python main.py
 ## Interact with Aria:
 ### Use voice commands, such as:
 
-"Open Google"
-"Play NCS songs on YouTube"
+"Open Google"<br>
+"Play NCS songs on YouTube"<br>
 "What is Artificial Intelligence?"
 
 ## Stop the Assistant:
