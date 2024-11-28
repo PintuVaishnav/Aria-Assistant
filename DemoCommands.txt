@@ -1,0 +1,31 @@
+1. Opening Websites
+
+Open Google
+Open YouTube
+Open Spotify
+Open Facebook
+Open Twitter
+Open Instagram
+Open LinkedIn
+
+2. Opening Websites with Tasks
+
+Open YouTube and play NCS songs
+Open Google and search Python
+Open Google and search latest tech news
+Open Spotify and play relaxing music
+Open YouTube and search coding tutorials
+Open Google and search weather in Hyderabad
+
+3. Definition of Terms
+
+What is Python?
+What is AI?
+Who is Elon Musk?
+Define Ecosystem
+What is Machine Learning?
+Define Blockchain
+What is Cloud Computing?
+Who is Sundar Pichai?
+What is a Web Browser?
+Define Operating System
